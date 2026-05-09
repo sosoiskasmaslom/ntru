@@ -9,11 +9,11 @@ namespace own {
     size_t min(size_t a, size_t b);
 
     class polynom {
-        size_t *_vector;
-        unsigned _N;
+        size_t *_vector; // коэффициенты полинома
+        unsigned _N; // степень многочлена
     public:
         polynom();
-        polynom(unsigned N);
+        polynom(unsigned N); // полином с случайными коэффициентами
         polynom(unsigned N, size_t a);
         polynom(unsigned N, size_t *vector);
         polynom(const polynom& other);
@@ -22,41 +22,46 @@ namespace own {
 
         polynom& operator=(const polynom& other);
 
+        // скалярные операции
         polynom& operator+=(size_t x);
         polynom& operator-=(size_t x);
         polynom& operator*=(size_t x);
         polynom& operator/=(size_t x);
         polynom& operator%=(size_t x);
 
-        polynom& operator+=(const polynom& other);
-        polynom& operator-=(const polynom& other);
-        polynom& operator*=(const polynom& other);
-        polynom& operator/=(const polynom& other);
-        polynom& operator%=(const polynom& other);
+        // особые умножение и деление
+        // надо будет их описать
+        polynom& operator+=(polynom other);
+        polynom& operator-=(polynom other);
+        polynom& operator*=(polynom other);
+        polynom& operator/=(polynom other);
+        polynom& operator%=(polynom other);
 
+        // сделаю через операторы выше
         polynom operator+(size_t x);
         polynom operator-(size_t x);
         polynom operator*(size_t x);
         polynom operator/(size_t x);
         polynom operator%(size_t x);
 
-        polynom operator+(const polynom& other);
-        polynom operator-(const polynom& other);
-        polynom operator*(const polynom& other);
-        polynom operator/(const polynom& other);
-        polynom operator%(const polynom& other);
+        polynom operator+(polynom other);
+        polynom operator-(polynom other);
+        polynom operator*(polynom other);
+        polynom operator/(polynom other);
+        polynom operator%(polynom other);
 
         size_t  operator[](unsigned int i) const;
         size_t& operator[](unsigned int i);
 
+        // клон оператора [] в функциональном виде
         size_t  at(unsigned i) const;
         size_t& at(unsigned i);
 
-        unsigned get_N() const;
-        size_t* get_v() const;
+        unsigned get_N() const; // возвращает _N
+        size_t* get_v() const; // возвращает ссылку на массив
 
-        polynom mod(int x);
-        polynom mod(const polynom& other);
+        polynom mod(int x); // приведение по скалярному модулю
+        polynom mod(const polynom& other); // приведение по векторному модулю
     };
 
 }
