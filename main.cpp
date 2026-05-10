@@ -11,7 +11,6 @@ int main() {
     own::polynom res {fuck * society};
 
     own::size_t *pointer = res.get_v();
-    cout << "-------------" << endl;
     for(int i = 0; i<5; ++i)
         cout << *(pointer++) << ' ';
     cout << endl;

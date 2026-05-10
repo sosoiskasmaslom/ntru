@@ -79,12 +79,10 @@ polynom polynom::operator*(polynom other) {
     polynom tmp {_N, 0};
     for(unsigned k=0; k<_N; ++k) {
         for(unsigned i=0; i<k+1; ++i)
-        { tmp[k] += this->at(i) * other.at(k-i); std::cout << tmp[k] << ' '; }
+        { tmp[k] += this->at(i) * other.at(k-i); }
 
         for(unsigned i=k+1; i<_N; ++i)
-        { tmp[k] += this->at(i) * other.at(_N+k-i);  std::cout << tmp[k] << ' '; }
-
-        std::cout << std::endl;
+        { tmp[k] += this->at(i) * other.at(_N+k-i); }
     }
 
     return tmp;
