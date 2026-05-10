@@ -65,8 +65,34 @@ polynom& polynom::operator-=(polynom other)
 { return *this += other *= -1; }
 
 
+polynom polynom::operator+(polynom other)
+{ return other += *this; }
+
+polynom polynom::operator-(polynom other)
+{ return other -= *this; }
+
+
+polynom polynom::operator*(polynom other) {
+    if (this->_N != other.get_N())
+    { return *this; }
+
+    polynom tmp {_N, 0};
+    for(unsigned k=0; k<_N; ++k) {
+        for(unsigned i=0; i<k+1; ++i)
+        { tmp[k] += this->at(i) * other.at(k-i); std::cout << tmp[k] << ' '; }
+
+        for(unsigned i=k+1; i<_N; ++i)
+        { tmp[k] += this->at(i) * other.at(_N+k-i);  std::cout << tmp[k] << ' '; }
+
+        std::cout << std::endl;
+    }
+
+    return tmp;
+}
+
+
 own::size_t  polynom::operator[](unsigned i) const
-{ return *(_vector+i); }
+{ return this->at(i); }
 
 own::size_t& polynom::operator[](unsigned i)
-{ return *(_vector+i); }
+{ return this->at(i); }

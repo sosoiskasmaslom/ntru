@@ -1,5 +1,6 @@
 
 #pragma once
+#include <ostream>
 
 namespace own {
 
@@ -29,17 +30,14 @@ namespace own {
         polynom& operator/=(size_t x);
         polynom& operator%=(size_t x);
 
-        // особые умножение и деление
-        // надо будет их описать
         polynom& operator+=(polynom other);
         polynom& operator-=(polynom other);
-        polynom& operator*=(polynom other);
-        polynom& operator/=(polynom other);
-        polynom& operator%=(polynom other);
 
-        // сделаю через операторы выше
         polynom operator+(size_t x);
         polynom operator-(size_t x);
+
+        // особые умножение и деление
+        // надо будет их описать
         polynom operator*(size_t x);
         polynom operator/(size_t x);
         polynom operator%(size_t x);
@@ -62,6 +60,8 @@ namespace own {
 
         polynom mod(int x); // приведение по скалярному модулю
         polynom mod(const polynom& other); // приведение по векторному модулю
+
+        void draw(std::ostream& out);
     };
 
 }

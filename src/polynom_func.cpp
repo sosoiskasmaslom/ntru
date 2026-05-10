@@ -3,12 +3,11 @@
 #include "polynom.h"
 using namespace own;
 
-own::size_t max(own::size_t a, own::size_t b)
+own::size_t own::max(own::size_t a, own::size_t b)
 { return (a>b) ? a : b; }
 
-own::size_t min(own::size_t a, own::size_t b)
+own::size_t own::min(own::size_t a, own::size_t b)
 { return (a<b) ? a : b; }
-
 
 
 polynom::polynom()
@@ -47,10 +46,10 @@ polynom::~polynom()
 { delete[] _vector; }
 
 own::size_t polynom::at(unsigned i) const
-{ return _vector[i]; }
+{ return *(_vector+i); }
 
 own::size_t& polynom::at(unsigned i)
-{ return _vector[i]; }
+{ return *(_vector+i); }
 
 unsigned polynom::get_N() const
 { return _N; }
