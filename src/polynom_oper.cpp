@@ -88,6 +88,13 @@ polynom polynom::operator*(polynom other) {
     return tmp;
 }
 
+//polynom polynom::operator/(polynom other) {
+//    size_t N = abs(this->_N - other.get_N());
+//    size_t *v = new size_t[N];
+//
+//
+//}
+
 
 own::size_t  polynom::operator[](unsigned i) const
 { return this->at(i); }

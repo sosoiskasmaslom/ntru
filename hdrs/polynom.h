@@ -8,6 +8,7 @@ namespace own {
 
     size_t max(size_t a, size_t b);
     size_t min(size_t a, size_t b);
+    size_t abs(size_t a);
 
     class polynom {
         size_t *_vector; // коэффициенты полинома
@@ -58,10 +59,12 @@ namespace own {
         unsigned get_N() const; // возвращает _N
         size_t* get_v() const; // возвращает ссылку на массив
 
-        polynom mod(int x); // приведение по скалярному модулю
-        polynom mod(const polynom& other); // приведение по векторному модулю
+        polynom mult_x(int p) const; // домножаем на степень
 
-        void draw(std::ostream& out);
+        polynom mod(int x) const; // приведение по скалярному модулю
+        polynom mod(const polynom& other) const; // приведение по векторному модулю
+
+        std::ostream& draw(std::ostream& out) const;
     };
 
 }
