@@ -57,12 +57,13 @@ namespace own {
         size_t& at(unsigned i);
 
         unsigned get_N() const; // возвращает _N
-        size_t* get_v() const; // возвращает ссылку на массив
+        size_t*  get_v() const; // возвращает ссылку на массив
+        int get_d() const; // возвращает степень полинома
 
         polynom mult_x(int p) const; // домножаем на степень
 
-        polynom mod(int x) const; // приведение по скалярному модулю
-        polynom mod(const polynom& other) const; // приведение по векторному модулю
+        polynom div_mod(const polynom& other, size_t p) const;
+        polynom rem_mod(const polynom& other, size_t p) const;
 
         std::ostream& draw(std::ostream& out) const;
     };
