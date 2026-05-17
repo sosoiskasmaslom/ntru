@@ -37,8 +37,6 @@ namespace own {
         polynom operator+(size_t x);
         polynom operator-(size_t x);
 
-        // особые умножение и деление
-        // надо будет их описать
         polynom operator*(size_t x);
         polynom operator/(size_t x);
         polynom operator%(size_t x);
@@ -46,8 +44,6 @@ namespace own {
         polynom operator+(polynom other);
         polynom operator-(polynom other);
         polynom operator*(polynom other);
-        polynom operator/(polynom other);
-        polynom operator%(polynom other);
 
         size_t  operator[](unsigned int i) const;
         size_t& operator[](unsigned int i);
