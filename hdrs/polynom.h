@@ -62,6 +62,7 @@ namespace own {
 
         polynom div_mod(const polynom& other, size_t p) const;
         polynom rem_mod(const polynom& other, size_t p) const;
+        polynom     mod(const  polynom& other, size_t p) const;
 
         std::ostream& draw(std::ostream& out) const;
     };

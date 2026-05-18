@@ -170,6 +170,9 @@ polynom polynom::rem_mod(const polynom& other, size_t p) const {
     return result;
 }
 
+polynom polynom::mod(const polynom& other, int p) const
+{ return rem_mod(other, p); }
+
 std::ostream& polynom::draw(std::ostream& out) const {
     for(unsigned i = 0; i < _N; i++) {
         if(i == 0) {}

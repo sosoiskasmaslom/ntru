@@ -65,6 +65,16 @@ polynom& polynom::operator-=(polynom other)
 { return *this += other *= -1; }
 
 
+polynom polynom::operator+(size_t x)
+{ return polynom(*this)+=x; }
+
+polynom polynom::operator-(size_t x)
+{ return polynom(*this)-=x; }
+
+polynom polynom::operator*(size_t x)
+{ return polynom(*this)*=x; }
+
+
 polynom polynom::operator+(polynom other)
 { return other += *this; }
 
