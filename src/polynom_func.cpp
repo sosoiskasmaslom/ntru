@@ -2,6 +2,8 @@
 #include <ostream>
 #include "polynom.h"
 #include "euclid.h"
+#include <random>
+#include <chrono>
 using namespace own;
 
 own::size_t own::max(own::size_t a, own::size_t b)
@@ -13,14 +15,22 @@ own::size_t own::min(own::size_t a, own::size_t b)
 own::size_t own::abs(own::size_t a)
 { return (a>=0) ? a : -1*a; }
 
+int own::randint(int min, int max) {
+    static std::mt19937 gen(
+        std::chrono::steady_clock::now().time_since_epoch().count()
+    );
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(gen);
+}
+
 
 polynom::polynom()
 : _N(0), _vector(new size_t[_N])
 {}
 
 polynom::polynom(unsigned N)
-: own::polynom(N, 0)
-{}
+: _N(N), _vector(new size_t[_N])
+{ for(size_t *t=_vector; t<_vector+_N; *(t++)=randint(0, 256)) {} }
 
 polynom::polynom(unsigned N, size_t a)
 : _N(N), _vector(new size_t[_N])

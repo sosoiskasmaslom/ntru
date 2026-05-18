@@ -10,6 +10,8 @@ namespace own {
     size_t min(size_t a, size_t b);
     size_t abs(size_t a);
 
+    int randint(int min, int max);
+
     class polynom {
         size_t *_vector; // коэффициенты полинома
         unsigned _N; // степень многочлена
