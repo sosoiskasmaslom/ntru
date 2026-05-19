@@ -30,7 +30,7 @@ polynom::polynom()
 
 polynom::polynom(unsigned N)
 : _N(N), _vector(new size_t[_N])
-{ for(size_t *t=_vector; t<_vector+_N; *(t++)=randint(0, 256)) {} }
+{ for(size_t *t=_vector; t<_vector+_N; *(t++)=randint(-1, 1)) {} }
 
 polynom::polynom(unsigned N, size_t a)
 : _N(N), _vector(new size_t[_N])

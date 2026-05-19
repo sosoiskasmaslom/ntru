@@ -24,11 +24,17 @@ using namespace std;
 int main() {
     own::ntru test{5, 3, 11};
     own::polynom fuck = test.mark(12);
-    fuck.draw(cout);
+    fuck.draw(cout) << "before encrypt" << endl;
 
     test.encrypt(fuck);
 
-    fuck.draw(cout);
+    fuck.draw(cout) << "encrypted" << endl;
+
+    test.decrypt(fuck);
+
+    fuck.draw(cout) << "after encrypt" << endl;
+
+    cout << "number is " << test.umark(fuck) << endl;
 
     return 0;
 }

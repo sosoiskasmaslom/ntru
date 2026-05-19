@@ -1,7 +1,48 @@
 
+#include <stdexcept>
+
 #include "algorithm.h"
 #include "polynom.h"
+#include "euclid.h"
 using namespace own;
+
+
+own::polynom own::gen_f(
+        unsigned N, int d,
+        const polynom& nmo, int p, int q
+    ) {
+    polynom tmp {N, 0};
+    int run[] = {-1, 1};
+
+    std::cerr << "and here too" << std::endl;
+    while (1) {
+        for(int i = 0; i<N; ++i)
+            tmp[i] = 0;
+
+        for(auto r: run) {
+            for(int i=0, j; i<d; ) {
+                j = randint(0, N-1);
+                if(tmp[j] != 0) {
+                    continue;
+                } else {
+                    tmp[j] = 1;
+                    ++i;
+                }
+            }
+        }
+
+        try {
+            poly_inverse(tmp, nmo, p).draw(std::cerr);
+            poly_inverse(tmp, nmo, q).draw(std::cerr);
+            break;
+        } catch(const std::exception& e) {
+            std::cerr << "fcuk" << std::endl;
+        }
+    }
+    std::cerr << "circle is ended" << std::endl;
+
+    return tmp;
+}
 
 
 ntru::ntru(unsigned N, unsigned p, unsigned q)
@@ -12,13 +53,21 @@ ntru::ntru(const polynom& f, unsigned p, unsigned q)
 : _N(f.get_N()), _p(p), _q(q),
   _f(f), _g(polynom(_N))
 {
-    N_minus_one = polynom {_N, 0};
-    N_minus_one[0] = N_minus_one[_N-1] = 1;
+    N_minus_one     = polynom {_N+1, 0};
+    N_minus_one[0]  = -1;
+    N_minus_one[_N] = 1;
 
-    _F_q = _f.mod(N_minus_one, _q);
-    _F_p = _f.mod(N_minus_one, _p);
+    std::cerr << "i was here" << std::endl;
+    _f = gen_f(_N, 2, N_minus_one, p, q);
+    std::cerr << "finished gen" << std::endl;
 
-    _h = (_F_q * _g).mod(N_minus_one, _q);
+    _F_q = poly_inverse(_f, N_minus_one, _q);
+    _F_p = poly_inverse(_f, N_minus_one, _p);
+    std::cerr << "no mother?" << std::endl;
+
+    (_F_q * _f).draw(std::cerr);
+    _h = poly_inverse(_F_q * _g, N_minus_one, _q);
+    std::cerr << "it isnt public key" << std::endl;
 }
 
 const polynom& ntru::get_f() const

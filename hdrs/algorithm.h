@@ -4,6 +4,8 @@
 
 namespace own {
 
+    polynom gen_f(unsigned N, int d, const polynom& nmo, int p, int q);
+
     class ntru {
         unsigned _N;
         unsigned  _p,  _q;
