@@ -1,14 +1,16 @@
 
 #include <iostream>
 #include "polynom.h"
+#include "algorithm.h"
 using namespace std;
 
 int main() {
-    own::polynom fuck {15, 0};
-    fuck.mult_x(-9).draw(cout);
+    own::polynom fuck(3, 2);
+    own::polynom society(3, 4);
 
-//for(int i = 0; i<9; ++i)
-//        fuck.mult_x(i).draw(cout);
+    //fuck * society;
+    (fuck * society).draw(std::cout);
+    //(fuck + 3).draw(std::cout);
 
     return 0;
 }

@@ -52,48 +52,71 @@ polynom& polynom::operator%=(size_t x) {
 }
 
 
-polynom& polynom::operator+=(polynom other) {
+polynom& polynom::operator+=(const polynom& other) {
     for(
         size_t *t=_vector, *o=other.get_v();
         t < _vector+min(_N, other.get_N());
         *(t++) += *(o++)
-       ) {}
+    ) {}
     return *this;
 }
 
-polynom& polynom::operator-=(polynom other)
-{ return *this += other *= -1; }
+polynom& polynom::operator-=(const polynom& other) {
+    for(
+        size_t *t=_vector, *o=other.get_v();
+        t < _vector+min(_N, other.get_N());
+        *(t++) -= *(o++)
+    ) {}
+    return *this;
+}
 
-
-polynom polynom::operator+(polynom other)
-{ return other += *this; }
-
-polynom polynom::operator-(polynom other)
-{ return other -= *this; }
-
-
-polynom polynom::operator*(polynom other) {
-    if (this->_N != other.get_N())
+polynom& polynom::operator*=(const polynom& other) {
+    if (this->get_N() != other.get_N())
     { return *this; }
 
-    polynom tmp {_N, 0};
-    for(unsigned k=0; k<_N; ++k) {
+    size_t *tmp = new size_t[get_N()];
+    for(int i = 0; i<get_N(); ++i)
+    { tmp[i] = 0; }
+
+    for(unsigned k=0; k<get_N(); ++k) {
         for(unsigned i=0; i<k+1; ++i)
         { tmp[k] += this->at(i) * other.at(k-i); }
 
-        for(unsigned i=k+1; i<_N; ++i)
+        for(unsigned i=k+1; i<get_N(); ++i)
         { tmp[k] += this->at(i) * other.at(_N+k-i); }
     }
 
-    return tmp;
+    delete[] _vector;
+    _vector = tmp;
+
+    return *this;
 }
 
-//polynom polynom::operator/(polynom other) {
-//    size_t N = abs(this->_N - other.get_N());
-//    size_t *v = new size_t[N];
-//
-//
-//}
+
+polynom polynom::operator+(size_t x) const
+{ return own::polynom(*this) += x; }
+
+polynom polynom::operator-(size_t x) const
+{ return own::polynom(*this) -= x; }
+
+polynom polynom::operator*(size_t x) const
+{ return own::polynom(*this) *= x; }
+
+polynom polynom::operator/(size_t x) const
+{ return own::polynom(*this) /= x; }
+
+polynom polynom::operator%(size_t x) const
+{ return own::polynom(*this) %= x; }
+
+
+polynom polynom::operator+(const polynom& other) const
+{ return own::polynom(*this) += other; }
+
+polynom polynom::operator-(const polynom& other) const
+{ return own::polynom(*this) -= other; }
+
+polynom polynom::operator*(const polynom& other) const
+{ return own::polynom(*this) *= other; }
 
 
 own::size_t  polynom::operator[](unsigned i) const

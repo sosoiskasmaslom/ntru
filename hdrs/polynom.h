@@ -10,11 +10,13 @@ namespace own {
     size_t min(size_t a, size_t b);
     size_t abs(size_t a);
 
+    size_t randint(size_t min, size_t max);
+
     class polynom {
         size_t *_vector; // коэффициенты полинома
         unsigned _N; // степень многочлена
     public:
-        polynom();
+        polynom() = delete;
         polynom(unsigned N); // полином с случайными коэффициентами
         polynom(unsigned N, size_t a);
         polynom(unsigned N, size_t *vector);
@@ -31,23 +33,19 @@ namespace own {
         polynom& operator/=(size_t x);
         polynom& operator%=(size_t x);
 
-        polynom& operator+=(polynom other);
-        polynom& operator-=(polynom other);
+        polynom& operator+=(const polynom& other);
+        polynom& operator-=(const polynom& other);
+        polynom& operator*=(const polynom& other);
 
-        polynom operator+(size_t x);
-        polynom operator-(size_t x);
+        polynom operator+(size_t x) const;
+        polynom operator-(size_t x) const;
+        polynom operator*(size_t x) const;
+        polynom operator/(size_t x) const;
+        polynom operator%(size_t x) const;
 
-        // особые умножение и деление
-        // надо будет их описать
-        polynom operator*(size_t x);
-        polynom operator/(size_t x);
-        polynom operator%(size_t x);
-
-        polynom operator+(polynom other);
-        polynom operator-(polynom other);
-        polynom operator*(polynom other);
-        polynom operator/(polynom other);
-        polynom operator%(polynom other);
+        polynom operator+(const polynom& other) const;
+        polynom operator-(const polynom& other) const;
+        polynom operator*(const polynom& other) const;
 
         size_t  operator[](unsigned int i) const;
         size_t& operator[](unsigned int i);
@@ -60,9 +58,6 @@ namespace own {
         size_t* get_v() const; // возвращает ссылку на массив
 
         polynom mult_x(int p) const; // домножаем на степень
-
-        polynom mod(int x) const; // приведение по скалярному модулю
-        polynom mod(const polynom& other) const; // приведение по векторному модулю
 
         std::ostream& draw(std::ostream& out) const;
     };

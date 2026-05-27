@@ -1,5 +1,7 @@
 
-#include <ostream>
+#include <iostream>
+#include <random>
+#include <chrono>
 #include "polynom.h"
 using namespace own;
 
@@ -12,41 +14,47 @@ own::size_t own::min(own::size_t a, own::size_t b)
 own::size_t own::abs(own::size_t a)
 { return (a>=0) ? a : -1*a; }
 
+int own::randint(int min, int max) {
+    static std::mt19937 gen(
+        std::chrono::steady_clock::now().time_since_epoch().count()
+    );
+    std::uniform_int_distribution<int> dist(min, max);
+    return dist(gen);
+}
 
-polynom::polynom()
-: _N(0), _vector(new size_t[_N])
-{}
 
 polynom::polynom(unsigned N)
-: own::polynom(N, 0)
-{}
+: _N(N), _vector(new size_t[N])
+{
+    for(int i = 0; i < get_N(); i++)
+    { at(i) = own::randint(0, 1); }
+}
 
 polynom::polynom(unsigned N, size_t a)
-: _N(N), _vector(new size_t[_N])
-{ for(size_t *t=_vector; t<_vector+_N; *(t++)=a) {} }
+: _N(N), _vector(new size_t[N])
+{
+    for(int i = 0; i < get_N(); i++)
+    { at(i) = a; }
+}
 
 polynom::polynom(unsigned N, size_t *vector)
-: _N(N), _vector(new size_t[_N])
+: _N(N), _vector(new size_t[N])
 {
-    for(
-        size_t *t=_vector, *o=vector;
-        t<_vector+_N;
-        *(t++)=*(o++)
-    ) {}
+    for(int i = 0; i < get_N(); i++)
+    { at(i) = vector[i]; }
 }
 
 polynom::polynom(const polynom& other)
-: _N(other.get_N()), _vector(new size_t[_N])
+: _N(other.get_N()), _vector(new size_t[other.get_N()])
 {
-    for(
-        size_t *t=_vector, *o=other.get_v();
-        t<_vector+_N;
-        *(t++)=*(o++)
-    ) {}
+    for(int i = 0; i < get_N(); i++)
+    { at(i) = other[i]; }
 }
+
 
 polynom::~polynom()
 { delete[] _vector; }
+
 
 own::size_t polynom::at(unsigned i) const
 { return (i < _N) ? *(_vector+i) : *(_vector+i-_N); }
@@ -54,11 +62,13 @@ own::size_t polynom::at(unsigned i) const
 own::size_t& polynom::at(unsigned i)
 { return *(_vector+i); }
 
+
 unsigned polynom::get_N() const
 { return _N; }
 
 own::size_t* polynom::get_v() const
 { return _vector; }
+
 
 polynom polynom::mult_x(int p) const {
     if(p == 0)
@@ -72,6 +82,7 @@ polynom polynom::mult_x(int p) const {
 
     return tmp;
 }
+
 
 std::ostream& polynom::draw(std::ostream& out) const {
     for(unsigned i = 0; i < _N; i++) {
