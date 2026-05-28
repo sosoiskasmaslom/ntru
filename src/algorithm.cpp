@@ -3,6 +3,7 @@
 using namespace own;
 
 int own::ext_euclid(int f, int g, int p) {
+    f = own::abs_mod(f, p);
     int x1 = 0, x2 = 1, tmp = 0, q = 0;
     for (; f != g;) {
         tmp = p;

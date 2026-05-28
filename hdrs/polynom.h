@@ -55,9 +55,12 @@ namespace own {
         size_t& at(unsigned i);
 
         unsigned get_N() const; // возвращает _N
-        size_t* get_v() const; // возвращает ссылку на массив
+        size_t*  get_v() const; // возвращает ссылку на массив
+        int      get_d() const; // возвращает степень полинома
+                                // (старший ненулевой элемент)
 
-        polynom mult_x(int p) const; // домножаем на степень
+        //нахождение обратного элемента (полинома)
+        polynom rev(const polynom& other, size_t p) const;
 
         std::ostream& draw(std::ostream& out) const;
     };

@@ -3,7 +3,15 @@
 #include <random>
 #include <chrono>
 #include "polynom.h"
+#include "algorithm.h"
 using namespace own;
+
+
+template<typename F>
+void edit_v(own::size_t *v, unsigned N, F op) {
+    for(own::size_t *end = v+N; v<end; op(*(v++))) {}
+}
+
 
 own::size_t own::max(own::size_t a, own::size_t b)
 { return (a>b) ? a : b; }
@@ -57,10 +65,10 @@ polynom::~polynom()
 
 
 own::size_t polynom::at(unsigned i) const
-{ return (i < _N) ? *(_vector+i) : *(_vector+i-_N); }
+{ return *(_vector + own::abs_mod(i, _N)); }
 
 own::size_t& polynom::at(unsigned i)
-{ return *(_vector+i); }
+{ return *(_vector + own::abs_mod(i, _N)); }
 
 
 unsigned polynom::get_N() const
@@ -69,18 +77,49 @@ unsigned polynom::get_N() const
 own::size_t* polynom::get_v() const
 { return _vector; }
 
+int polynom::get_d() const {
+    for(int i = get_N()-1; i >= 0; --i)
+        if (at(i) != 0) return i;
+    return -1;
+}
 
-polynom polynom::mult_x(int p) const {
-    if(p == 0)
-    { return *this; }
 
-    unsigned N = this->_N + p;
-    polynom tmp {N, 0};
+polynom polynom::rev(const polynom& other, size_t p) const {
+    int deg_a = this->get_d();
+    int deg_b = other.get_d();
 
-    for(unsigned i=N; i>p; --i)
-    { tmp[i] = at(min(i, i-p)); }
+    if (deg_b < 0 )
+    { throw std::invalid_argument("Division by zero polynomial"); }
 
-    return tmp;
+    if (deg_a < deg_b) {
+        polynom result(*this);
+        edit_v(result.get_v(), result.get_N(), [p](size_t &v){ v = own::abs_mod(v, p); });
+        return result;
+    }
+
+    polynom remainder(*this);
+    edit_v(remainder.get_v(), remainder.get_N(), [p](size_t &v){ v = own::abs_mod(v, p); });
+
+    size_t lead_b = own::abs_mod(other[deg_b], p);
+    size_t inv_lead = own::ext_euclid(lead_b, 1, p);
+
+    for (int i = deg_a - deg_b; i >= 0; --i) {
+        size_t coef = (remainder[i + deg_b] * inv_lead) % p;
+
+        for (int j = 0; j <= deg_b; ++j) {
+            size_t sub = coef * other[j] % p;
+            remainder[i + j] = own::abs_mod((remainder[i + j] - sub), p);
+        }
+    }
+
+    int rem_deg = remainder.get_d();
+    if (rem_deg < 0) return polynom(1);
+
+    polynom result(rem_deg + 1);
+    for (int i = 0; i <= rem_deg; ++i)
+    { result[i] = remainder[i]; }
+
+    return result;
 }
 
 
