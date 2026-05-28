@@ -5,13 +5,17 @@
 using namespace std;
 
 int main() {
-    own::polynom nmo(6, 0);
-    nmo[0] = -1; nmo[-1] = 1;
-    nmo.draw(cout);
+    int secr[] = {1, 1, -1, 1, -1};
+    int mesg[] = {1, 1,  1, 1,  1};
+    own::ntru fun(own::polynom(5, secr), 3, 11);
 
-    own::polynom fuck(5, 2);
-    fuck.draw(cout);
-    fuck.rev(nmo, 3).draw(cout);
+    own::polynom msg(5, mesg);
+    own::polynom enc_msg = fun.encrypt(msg);
+    own::polynom dec_msg = fun.decrypt(enc_msg);
+
+        msg.draw(cout) << " - before changes" << endl;
+    enc_msg.draw(cout) << " - encrypted" << endl;
+    dec_msg.draw(cout) << " - decrypted" << endl;
 
     return 0;
 }

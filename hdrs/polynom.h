@@ -16,7 +16,7 @@ namespace own {
         size_t *_vector; // коэффициенты полинома
         unsigned _N; // степень многочлена
     public:
-        polynom() = delete;
+        polynom();
         polynom(unsigned N); // полином с случайными коэффициентами
         polynom(unsigned N, size_t a);
         polynom(unsigned N, size_t *vector);

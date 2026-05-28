@@ -31,6 +31,10 @@ int own::randint(int min, int max) {
 }
 
 
+polynom::polynom()
+: polynom(5)
+{}
+
 polynom::polynom(unsigned N)
 : _N(N), _vector(new size_t[N])
 {
