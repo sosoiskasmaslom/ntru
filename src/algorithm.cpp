@@ -17,3 +17,6 @@ int own::ext_euclid(int f, int g, int p) {
 
     return x2;
 }
+
+unsigned own::abs_mod(int f, int p)
+{ return (f < 0) ? (p - own::abs(f) % p) : (f%p); }
