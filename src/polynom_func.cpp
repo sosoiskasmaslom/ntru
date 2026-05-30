@@ -19,6 +19,14 @@ own::size_t own::max(own::size_t a, own::size_t b)
 own::size_t own::min(own::size_t a, own::size_t b)
 { return (a<b) ? a : b; }
 
+own::size_t own::pow(own::size_t a, own::size_t b)
+{
+    for(size_t c = a; b-1; --b)
+    { a *= c; }
+
+    return a;
+}
+
 own::size_t own::abs(own::size_t a)
 { return (a>=0) ? a : -1*a; }
 
@@ -39,7 +47,7 @@ polynom::polynom(unsigned N)
 : _N(N), _vector(new size_t[N])
 {
     for(int i = 0; i < get_N(); i++)
-    { at(i) = own::randint(0, 1); }
+    { at(i) = own::randint(-1, 1); }
 }
 
 polynom::polynom(unsigned N, size_t a)
@@ -69,10 +77,10 @@ polynom::~polynom()
 
 
 own::size_t polynom::at(unsigned i) const
-{ return *(_vector + own::abs_mod(i, _N)); }
+{ return *(_vector + own::abs_mod(i, get_N())); }
 
 own::size_t& polynom::at(unsigned i)
-{ return *(_vector + own::abs_mod(i, _N)); }
+{ return *(_vector + own::abs_mod(i, get_N())); }
 
 
 unsigned polynom::get_N() const
@@ -88,6 +96,48 @@ int polynom::get_d() const {
 }
 
 
+polynom* polynom::division(const polynom& other) const {
+
+    if (other.get_d() < 0 )
+    { throw std::invalid_argument("Division by zero polynomial"); }
+
+    int deg_a = this->get_d();
+    int deg_b = other.get_d();
+    int deg_c = deg_a - deg_b + 1;
+
+    polynom *res = new polynom[2];
+    *res      = polynom(deg_c, 0); // частное
+    *(res+1)  = polynom(*this); // остаток от деления
+    *(res+1) *= own::pow(
+                    other[other.get_d()],
+                    own::abs(at(get_d()) - other[other.get_d()]) + 1
+                );
+
+    if (deg_a < deg_b)
+    { return res; }
+
+    for(int i = deg_c-1; (i+1); --i) {
+        (*res).at(i) = (*(res+1)).at((*(res+1)).get_d()) / other[other.get_d()];
+        *(res+1) -= (other.mult_x(i) *= (*res).at(i));
+    }
+
+    return res;
+}
+
+polynom polynom::mult_x(int p) const {
+    if (p == 0)
+    { return *this; }
+
+    if (get_d()+1 + p <= 0)
+    { return polynom(1, 0); }
+
+    polynom tmp(get_d()+1 + p, 0);
+    for(int i = get_d(); (i+1) && (i+p+1); --i)
+    { tmp.at(i+p) = at(i); }
+
+    return tmp;
+}
+
 polynom polynom::rev(const polynom& other, size_t p) const {
     int deg_a = this->get_d();
     int deg_b = other.get_d();
@@ -101,41 +151,29 @@ polynom polynom::rev(const polynom& other, size_t p) const {
         return result;
     }
 
-    polynom remainder(*this);
-    edit_v(remainder.get_v(), remainder.get_N(), [p](size_t &v){ v = own::abs_mod(v, p); });
+    // в общем должны получаться дроби с 1 в числителе
+    // к знаменателю ищем обратный элемент по модлую p
+    // это наш множитель
+    // дальше дробь считаем как простую
 
-    size_t lead_b = own::abs_mod(other[deg_b], p);
-    size_t inv_lead = own::ext_euclid(lead_b, 1, p);
+    // дальше проворачиваем расширенный алгоритм евклида
 
-    for (int i = deg_a - deg_b; i >= 0; --i) {
-        size_t coef = (remainder[i + deg_b] * inv_lead) % p;
 
-        for (int j = 0; j <= deg_b; ++j) {
-            size_t sub = coef * other[j] % p;
-            remainder[i + j] = own::abs_mod((remainder[i + j] - sub), p);
-        }
-    }
-
-    int rem_deg = remainder.get_d();
-    if (rem_deg < 0) return polynom(1);
-
-    polynom result(rem_deg + 1);
-    for (int i = 0; i <= rem_deg; ++i)
-    { result[i] = remainder[i]; }
-
-    return result;
 }
 
 
 std::ostream& polynom::draw(std::ostream& out) const {
     for(unsigned i = 0; i < _N; i++) {
-        if(i == 0) {}
+        if(i == 0) {
+            if (at(i) < 0)
+            { out << " - ";}
+        }
         else if(at(i) >= 0) {
             out << " + ";
         } else {
             out << " - ";
         }
-        out << "(x^" << i << ")*" << at(i);
+        out << "(x^" << i << ")*" << own::abs(at(i));
     }
     out << std::endl;
 

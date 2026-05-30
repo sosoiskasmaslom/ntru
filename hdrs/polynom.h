@@ -8,6 +8,7 @@ namespace own {
 
     size_t max(size_t a, size_t b);
     size_t min(size_t a, size_t b);
+    size_t pow(size_t a, size_t b);
     size_t abs(size_t a);
 
     size_t randint(size_t min, size_t max);
@@ -59,6 +60,16 @@ namespace own {
         int      get_d() const; // возвращает степень полинома
                                 // (старший ненулевой элемент)
 
+
+        // я знаю что C-like код
+        // вообще будем самой некрасивой частью кода
+        // я буду делать грязб
+        // он будет возвращать ссылку на массив 2ух объектов
+        // (освобождение массива лежит на том кто использует)
+        // деления нацело и остатка от деления
+        // делим по модулю дабы не было дробей
+        polynom* division(const polynom& other) const;
+        polynom mult_x(int p) const;
         //нахождение обратного элемента (полинома)
         polynom rev(const polynom& other, size_t p) const;
 
