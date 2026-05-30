@@ -96,6 +96,22 @@ int polynom::get_d() const {
 }
 
 
+polynom& polynom::resize(int n) {
+    size_t *v = new size_t[n];
+    for(int i = 0; _N-i && n-i; ++i)
+    { v[i] = at(i); }
+
+    _N = n;
+    delete[] _vector;
+    _vector = v;
+
+    return *this;
+}
+
+polynom& polynom::fit()
+{ return resize(get_d()+1); }
+
+
 polynom* polynom::division(const polynom& other) const {
 
     if (other.get_d() < 0 )
@@ -135,20 +151,18 @@ polynom polynom::mult_x(int p) const {
     return tmp;
 }
 
-polynom polynom::rev(const polynom& other, size_t p) const {
-    int deg_a = this->get_d();
-    int deg_b = other.get_d();
+polynom polynom::mult(const polynom& other) const {
+    if (other.get_d() < 0)
+    { return polynom(1, 0); }
 
-    if (deg_b < 0 )
-    { throw std::invalid_argument("Division by zero polynomial"); }
+    polynom tmp(*this * other.at(0));
+    for(int i = other.get_d(); i; --i)
+    { tmp += (this->mult_x(i) *= other.at(i)); }
 
-    if (deg_a < deg_b) {
-        polynom result(*this);
-        edit_v(result.get_v(), result.get_N(), [p](size_t &v){ v = own::abs_mod(v, p); });
-        return result;
-    }
-
+    return tmp.fit();
 }
+
+polynom polynom::rev(const polynom& other, size_t p) const { }
 
 
 std::ostream& polynom::draw(std::ostream& out) const {

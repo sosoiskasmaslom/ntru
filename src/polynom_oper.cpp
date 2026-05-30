@@ -53,20 +53,22 @@ polynom& polynom::operator%=(size_t x) {
 
 
 polynom& polynom::operator+=(const polynom& other) {
-    for(
-        size_t *t=_vector, *o=other.get_v();
-        t < _vector+min(_N, other.get_N());
-        *(t++) += *(o++)
-    ) {}
+    if(this->get_N() < other.get_N())
+    { resize((int)(other.get_N() * 1.7)); }
+
+    for(int i = other.get_N(); i+1; --i)
+    { at(i) += other.at(i); }
+
     return *this;
 }
 
 polynom& polynom::operator-=(const polynom& other) {
-    for(
-        size_t *t=_vector, *o=other.get_v();
-        t < _vector+min(_N, other.get_N());
-        *(t++) -= *(o++)
-    ) {}
+    if(this->get_N() < other.get_N())
+    { resize((int)(other.get_N() * 1.7)); }
+
+    for(int i = other.get_N(); i+1; --i)
+    { at(i) -= other.at(i); }
+
     return *this;
 }
 

@@ -5,15 +5,13 @@
 using namespace std;
 
 int main() {
-    int a[] = {5, 1, 3, 2};
-    int b[] = {1, 2, 3};
+    int a[] = {-1, 1, -1, 1};
+    int b[] = {1, 1};
 
     own::polynom pa(4, a);
-    own::polynom pb(3, b);
+    own::polynom pb(2, b);
 
-    own::polynom *res = pa.division(pb);
-    (*(res+1)).draw(cout);
-    delete[] res;
+    pa.mult(pb).draw(cout);
 }
 
 //int main() {

@@ -15,7 +15,8 @@ namespace own {
 
     class polynom {
         size_t *_vector; // коэффициенты полинома
-        unsigned _N; // степень многочлена
+        unsigned _N; // размерность многочлена
+                     // (по сути размер массива)
     public:
         polynom();
         polynom(unsigned N); // полином с случайными коэффициентами
@@ -27,7 +28,6 @@ namespace own {
 
         polynom& operator=(const polynom& other);
 
-        // скалярные операции
         polynom& operator+=(size_t x);
         polynom& operator-=(size_t x);
         polynom& operator*=(size_t x);
@@ -51,25 +51,30 @@ namespace own {
         size_t  operator[](unsigned int i) const;
         size_t& operator[](unsigned int i);
 
-        // клон оператора [] в функциональном виде
+        // обращение к элементу i
         size_t  at(unsigned i) const;
         size_t& at(unsigned i);
 
-        unsigned get_N() const; // возвращает _N
+        unsigned get_N() const; // возвращает _N (по сути размер массива)
         size_t*  get_v() const; // возвращает ссылку на массив
         int      get_d() const; // возвращает степень полинома
                                 // (старший ненулевой элемент)
 
+        polynom& resize(int n); // задает размер полинома в n символов
+                           // (без перемещения коэффициентов)
+        polynom& fit(); // убирает нули после старшего члена
 
         // я знаю что C-like код
-        // вообще будем самой некрасивой частью кода
+        // вообще будет самой некрасивой частью кода
         // я буду делать грязб
         // он будет возвращать ссылку на массив 2ух объектов
         // (освобождение массива лежит на том кто использует)
         // деления нацело и остатка от деления
         // делим по модулю дабы не было дробей
+        // P.S. я доволен этим блоком
         polynom* division(const polynom& other) const;
-        polynom mult_x(int p) const;
+        polynom mult_x(int p) const; // умножение или деление на х
+        polynom mult(const polynom& other) const; // обычное умножение
         //нахождение обратного элемента (полинома)
         polynom rev(const polynom& other, size_t p) const;
 
