@@ -108,10 +108,7 @@ polynom* polynom::division(const polynom& other) const {
     polynom *res = new polynom[2];
     *res      = polynom(deg_c, 0); // частное
     *(res+1)  = polynom(*this); // остаток от деления
-    *(res+1) *= own::pow(
-                    other[other.get_d()],
-                    own::abs(at(get_d()) - other[other.get_d()]) + 1
-                );
+    *(res+1) *= own::pow( other[other.get_d()], deg_c);
 
     if (deg_a < deg_b)
     { return res; }
@@ -150,14 +147,6 @@ polynom polynom::rev(const polynom& other, size_t p) const {
         edit_v(result.get_v(), result.get_N(), [p](size_t &v){ v = own::abs_mod(v, p); });
         return result;
     }
-
-    // в общем должны получаться дроби с 1 в числителе
-    // к знаменателю ищем обратный элемент по модлую p
-    // это наш множитель
-    // дальше дробь считаем как простую
-
-    // дальше проворачиваем расширенный алгоритм евклида
-
 
 }
 
