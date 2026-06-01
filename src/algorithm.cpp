@@ -24,7 +24,7 @@ int own::ext_euclid(int f, int g, int p) {
 }
 
 unsigned own::abs_mod(int f, int p)
-{ return (f < 0) ? (p - own::abs(f) % p) : (f%p); }
+{ return (f % p + p) % p; }
 
 
 ntru::ntru(unsigned N, unsigned p, unsigned q)
@@ -86,15 +86,14 @@ const polynom& ntru::get_h() const
 
 polynom ntru::encrypt(const polynom& other) const {
     polynom r(_N); // уже случайный
-    polynom salt = (r * _p * _h).mod(N_minus_one).mod(_q);
+    polynom salt = (r * _h * _p);
 
     return (salt + other).mod(N_minus_one).mod(_q);
 }
 
 polynom ntru::decrypt(const polynom& other) const {
-    polynom a = (other * _f).mod(N_minus_one).mod(_q);
+    polynom a = (other * _f);
 
-    // центрируем из [0, q) в (-q/2, q/2]
     for (unsigned i = 0; i < _N; i++) {
         int coef = (int)a[i];
         if (coef > (int)_q / 2)

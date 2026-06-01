@@ -1,35 +1,13 @@
 
 #include <iostream>
+#include <algorithm>
+#include <cmath>
 #include <random>
 #include <chrono>
 #include "polynom.h"
 #include "algorithm.h"
 using namespace own;
 
-
-template<typename F>
-void edit_v(own::size_t *v, unsigned N, F op) {
-    for(own::size_t *end = v+N; v<end; op(v++)) {}
-}
-
-
-
-own::size_t own::max(own::size_t a, own::size_t b)
-{ return (a>b) ? a : b; }
-
-own::size_t own::min(own::size_t a, own::size_t b)
-{ return (a<b) ? a : b; }
-
-own::size_t own::pow(own::size_t a, own::size_t b)
-{
-    for(size_t c = a; b-1; --b)
-    { a *= c; }
-
-    return a;
-}
-
-own::size_t own::abs(own::size_t a)
-{ return (a>=0) ? a : -1*a; }
 
 int own::randint(int min, int max) {
     static std::mt19937 gen(
@@ -47,29 +25,41 @@ polynom::polynom()
 polynom::polynom(unsigned N)
 : _N(N), _vector(new size_t[N])
 {
-    for(int i = 0; i < get_N(); i++)
-    { at(i) = own::randint(-1, 1); }
+    std::for_each(
+        get_v(),
+        get_v()+N,
+        [](int &x){ x = own::randint(-1, 1); }
+    );
 }
 
 polynom::polynom(unsigned N, size_t a)
 : _N(N), _vector(new size_t[N])
 {
-    for(int i = 0; i < get_N(); i++)
-    { at(i) = a; }
+    std::for_each(
+        get_v(),
+        get_v()+_N,
+        [a](int &x){ x = a; }
+    );
 }
 
 polynom::polynom(unsigned N, size_t *vector)
 : _N(N), _vector(new size_t[N])
 {
-    for(int i = 0; i < get_N(); i++)
-    { at(i) = vector[i]; }
+    std::copy(
+        vector,
+        vector+_N,
+        get_v()
+    );
 }
 
 polynom::polynom(const polynom& other)
 : _N(other.get_N()), _vector(new size_t[other.get_N()])
 {
-    for(int i = 0; i < get_N(); i++)
-    { at(i) = other[i]; }
+    std::copy(
+        other.get_v(),
+        other.get_v()+_N,
+        get_v()
+    );
 }
 
 
@@ -113,8 +103,11 @@ polynom& polynom::fit()
 { return resize(get_d()+1); }
 
 polynom& polynom::mod(int p) {
-    for(int i = 0; get_N()-i; ++i)
-    { at(i) = own::abs_mod(at(i), p); }
+    std::for_each(
+        get_v(),
+        get_v() + get_N(),
+        [p](size_t &x){ x = own::abs_mod(x, p); }
+    );
 
     return *this;
 }
@@ -141,9 +134,9 @@ polynom* polynom::division(const polynom& other) const {
     int deg_c = deg_a - deg_b + 1;
 
     polynom *res = new polynom[2];
-    *res      = polynom(deg_c, 0); // частное
-    *(res+1)  = polynom(*this); // остаток от деления
-    *(res+1) *= own::pow( other[other.get_d()], deg_c);
+    *res         = polynom(deg_c, 0); // частное
+    *(res+1)     = polynom(*this); // остаток от деления
+    *(res+1)    *= std::pow(other[other.get_d()], deg_c);
 
     if (deg_a < deg_b)
     { return res; }
@@ -182,8 +175,6 @@ polynom polynom::mult(const polynom& other) const {
 }
 
 polynom polynom::rev(const polynom& other, size_t p) const {
-    //other.draw(std::cout) << p << std::endl;
-
     polynom first(other);
     polynom second(*this);
 
@@ -195,23 +186,18 @@ polynom polynom::rev(const polynom& other, size_t p) const {
     for(; second.get_d()>0; ) {
         tmp = first.division(second);
         first = second;
-        second = (*(tmp+1)).mod(p);
-        quotient = (*tmp).mod(p);
+        second = (tmp+1)->mod(p);
+
+        quotient = tmp->mod(p);
         if (!second.get_d())
         { (quotient *= own::ext_euclid(second.at(0), 1, p)).mod(p); }
+
         delete[] tmp;
 
         tmp = new polynom(x1);
-        x1 = (x2 - quotient.mult(x1)).mod(p);
-        x2 = (*tmp).mod(p);
+        x1 = x2 - quotient.mult(x1);
+        x2 = tmp->mod(p);
         delete tmp;
-
-        //first.draw(std::cout);
-        //second.draw(std::cout);
-        //quotient.draw(std::cout);
-        //x1.draw(std::cout);
-        //x2.draw(std::cout);
-        //std::cout << std::endl;
     }
 
     return x1.mod(p);
@@ -229,7 +215,7 @@ std::ostream& polynom::draw(std::ostream& out) const {
         } else {
             out << " - ";
         }
-        out << "(x^" << i << ")*" << own::abs(at(i));
+        out << "(x^" << i << ")*" << std::abs(at(i));
     }
     out << std::endl;
 

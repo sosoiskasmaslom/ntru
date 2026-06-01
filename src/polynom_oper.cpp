@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <algorithm>
 #include "polynom.h"
 using namespace own;
 
@@ -18,36 +19,48 @@ polynom& polynom::operator=(const polynom& other) {
 
     _N = other.get_N();
     _vector = new size_t[_N];
-    for(
-        size_t *t=_vector, *o=other.get_v();
-        t < _vector+_N;
-        *(t++) = *(o++)
-    ) {}
+    std::copy(
+        other.get_v(),
+        other.get_v() + other.get_N(),
+        get_v()
+    );
 
     return *this;
 }
 
 
-polynom& polynom::operator+=(size_t x) {
-    *_vector += x;
+polynom& polynom::operator+=(size_t a) {
+    *_vector += a;
     return *this;
 }
 
-polynom& polynom::operator-=(size_t x)
-{ return *this+=(-1*x); }
+polynom& polynom::operator-=(size_t a)
+{ return *this+=(-1*a); }
 
-polynom& polynom::operator*=(size_t x) {
-    edit_v(_vector, _N, [&x](size_t *v){ *v *= x; });
+polynom& polynom::operator*=(size_t a) {
+    std::for_each(
+        get_v(),
+        get_v() + get_N(),
+        [a](size_t &x){ x *= a; }
+    );
     return *this;
 }
 
-polynom& polynom::operator/=(size_t x) {
-    edit_v(_vector, _N, [&x](size_t *v){ *v /= x; });
+polynom& polynom::operator/=(size_t a) {
+    std::for_each(
+        get_v(),
+        get_v() + get_N(),
+        [a](size_t &x){ x /= a; }
+    );
     return *this;
 }
 
-polynom& polynom::operator%=(size_t x) {
-    edit_v(_vector, _N, [&x](size_t *v){ *v %= x; });
+polynom& polynom::operator%=(size_t a) {
+    std::for_each(
+        get_v(),
+        get_v() + get_N(),
+        [a](size_t &x){ x %= a; }
+    );
     return *this;
 }
 
@@ -95,20 +108,20 @@ polynom& polynom::operator*=(const polynom& other) {
 }
 
 
-polynom polynom::operator+(size_t x) const
-{ return own::polynom(*this) += x; }
+polynom polynom::operator+(size_t a) const
+{ return own::polynom(*this) += a; }
 
-polynom polynom::operator-(size_t x) const
-{ return own::polynom(*this) -= x; }
+polynom polynom::operator-(size_t a) const
+{ return own::polynom(*this) -= a; }
 
-polynom polynom::operator*(size_t x) const
-{ return own::polynom(*this) *= x; }
+polynom polynom::operator*(size_t a) const
+{ return own::polynom(*this) *= a; }
 
-polynom polynom::operator/(size_t x) const
-{ return own::polynom(*this) /= x; }
+polynom polynom::operator/(size_t a) const
+{ return own::polynom(*this) /= a; }
 
-polynom polynom::operator%(size_t x) const
-{ return own::polynom(*this) %= x; }
+polynom polynom::operator%(size_t a) const
+{ return own::polynom(*this) %= a; }
 
 
 polynom polynom::operator+(const polynom& other) const

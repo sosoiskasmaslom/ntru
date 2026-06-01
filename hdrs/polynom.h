@@ -6,11 +6,6 @@ namespace own {
 
     using size_t = int;
 
-    size_t max(size_t a, size_t b);
-    size_t min(size_t a, size_t b);
-    size_t pow(size_t a, size_t b);
-    size_t abs(size_t a);
-
     int randint(int min, int max);
 
     class polynom {
@@ -28,21 +23,21 @@ namespace own {
 
         polynom& operator=(const polynom& other);
 
-        polynom& operator+=(size_t x);
-        polynom& operator-=(size_t x);
-        polynom& operator*=(size_t x);
-        polynom& operator/=(size_t x);
-        polynom& operator%=(size_t x);
+        polynom& operator+=(size_t a);
+        polynom& operator-=(size_t a);
+        polynom& operator*=(size_t a);
+        polynom& operator/=(size_t a);
+        polynom& operator%=(size_t a);
 
         polynom& operator+=(const polynom& other);
         polynom& operator-=(const polynom& other);
         polynom& operator*=(const polynom& other);
 
-        polynom operator+(size_t x) const;
-        polynom operator-(size_t x) const;
-        polynom operator*(size_t x) const;
-        polynom operator/(size_t x) const;
-        polynom operator%(size_t x) const;
+        polynom operator+(size_t a) const;
+        polynom operator-(size_t a) const;
+        polynom operator*(size_t a) const;
+        polynom operator/(size_t a) const;
+        polynom operator%(size_t a) const;
 
         polynom operator+(const polynom& other) const;
         polynom operator-(const polynom& other) const;
