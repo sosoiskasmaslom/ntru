@@ -9,8 +9,9 @@ using namespace own;
 
 template<typename F>
 void edit_v(own::size_t *v, unsigned N, F op) {
-    for(own::size_t *end = v+N; v<end; op(*(v++))) {}
+    for(own::size_t *end = v+N; v<end; op(v++)) {}
 }
+
 
 
 own::size_t own::max(own::size_t a, own::size_t b)
@@ -96,10 +97,10 @@ int polynom::get_d() const {
 }
 
 
-polynom& polynom::resize(int n) {
+polynom& polynom::resize(unsigned n) {
     size_t *v = new size_t[n];
-    for(int i = 0; _N-i && n-i; ++i)
-    { v[i] = at(i); }
+    for(int i = 0; n-i; ++i)
+    { v[i] = (_N > i) ? at(i) : 0; }
 
     _N = n;
     delete[] _vector;
@@ -110,6 +111,13 @@ polynom& polynom::resize(int n) {
 
 polynom& polynom::fit()
 { return resize(get_d()+1); }
+
+polynom& polynom::mod(int p) {
+    for(int i = 0; get_N()-i; ++i)
+    { at(i) = own::abs_mod(at(i), p); }
+
+    return *this;
+}
 
 
 polynom* polynom::division(const polynom& other) const {
@@ -162,7 +170,39 @@ polynom polynom::mult(const polynom& other) const {
     return tmp.fit();
 }
 
-polynom polynom::rev(const polynom& other, size_t p) const { }
+polynom polynom::rev(const polynom& other, size_t p) const {
+    polynom first(other);
+    polynom second(*this);
+
+    polynom quotient;
+    polynom x1(1, 1), x2(1, 0);
+
+    polynom *tmp;
+
+    for(; second.get_d(); ) {
+        tmp = first.division(second);
+        first = second;
+        second = (*(tmp+1)).mod(p);
+        quotient = (*tmp).mod(p);
+        if (!second.get_d())
+        { (quotient *= own::ext_euclid(second.at(0), 1, p)).mod(p); }
+        delete[] tmp;
+
+        tmp = new polynom(x1);
+        x1 = (x2 - quotient.mult(x1)).mod(p);
+        x2 = (*tmp).mod(p);
+        delete tmp;
+
+        //first.draw(std::cout);
+        //second.draw(std::cout);
+        //quotient.draw(std::cout);
+        //x1.draw(std::cout);
+        //x2.draw(std::cout);
+        //std::cout << std::endl;
+    }
+
+    return x1.mod(p);
+}
 
 
 std::ostream& polynom::draw(std::ostream& out) const {
