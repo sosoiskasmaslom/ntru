@@ -119,6 +119,17 @@ polynom& polynom::mod(int p) {
     return *this;
 }
 
+polynom& polynom::mod(const polynom& other) {
+    if (other.get_d() > this->get_d())
+    { return *this; }
+
+    polynom *tmp = this->division(other);
+    *this = (*(tmp+1));
+    delete[] tmp;
+
+    return *this;
+}
+
 
 polynom* polynom::division(const polynom& other) const {
 
@@ -171,6 +182,8 @@ polynom polynom::mult(const polynom& other) const {
 }
 
 polynom polynom::rev(const polynom& other, size_t p) const {
+    //other.draw(std::cout) << p << std::endl;
+
     polynom first(other);
     polynom second(*this);
 
@@ -179,7 +192,7 @@ polynom polynom::rev(const polynom& other, size_t p) const {
 
     polynom *tmp;
 
-    for(; second.get_d(); ) {
+    for(; second.get_d()>0; ) {
         tmp = first.division(second);
         first = second;
         second = (*(tmp+1)).mod(p);

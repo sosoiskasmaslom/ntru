@@ -5,6 +5,17 @@
 using namespace std;
 
 //int main() {
+//    int a[] = {1, 2, 0, 1, 1};
+//    int b[] = {1, 0, 1};
+//
+//    own::polynom pa(5, a);
+//    own::polynom pb(3, b);
+//
+//    pb.mod(pa).draw(cout);
+//}
+
+//int main() {
+//
 //    int a[] = {6, -6, 6, -6};
 //    int b[] = {1, 1};
 //
@@ -30,7 +41,7 @@ using namespace std;
 //}
 
 //int main() {
-//    int p = 3, N = 5;
+//    int p = 3, q = 12, N = 5;
 //
 //    int secr[] = {1, 1, -1, 1, -1};
 //    own::polynom key(N, secr);
@@ -38,7 +49,13 @@ using namespace std;
 //    own::polynom N_minus_one(N+1, 0);
 //    N_minus_one[0] = -1; N_minus_one[-1] = 1;
 //
-//    key.rev(N_minus_one, p).mod(p).draw(cout);
+//    //own::polynom F_p = key.rev(N_minus_one, p).mod(q);
+//    own::polynom F_q = key.rev(N_minus_one, q).mod(q);
+//    F_q.draw(cout);
+//
+//    //own::polynom h = (F_q).rev(N_minus_one, q).mod(q);
+//
+//    //key.rev(N_minus_one, p).mod(p).draw(cout);
 //    //key.draw(cout);
 //
 //    //own::polynom *tmp = N_minus_one.division(key);
@@ -49,8 +66,8 @@ using namespace std;
 //}
 
 int main() {
-    int secr[] = {1, 1, -1, 1, -1};
-    int mesg[] = {1, 1,  1, 1,  1};
+    own::size_t secr[] = {1, 1, -1, 1, -1};
+    own::size_t mesg[] = {1, 1,  0, 0,  1};
     own::ntru fun(own::polynom(5, secr), 3, 11);
 
     own::polynom msg(5, mesg);
@@ -59,7 +76,7 @@ int main() {
 
         msg.draw(cout) << " - before changes" << endl;
     enc_msg.draw(cout) << " - encrypted" << endl;
-    dec_msg.draw(cout) << " - decrypted" << endl;
+    dec_msg.mod(3).draw(cout) << " - decrypted" << endl;
 
     return 0;
 }

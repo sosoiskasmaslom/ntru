@@ -45,7 +45,7 @@ ntru::ntru(polynom f, unsigned p, unsigned q)
     _F_p = _f.rev(N_minus_one, _p);
     _F_q = _f.rev(N_minus_one, _q);
 
-    _h = (_F_q * _g).rev(N_minus_one, _q);
+    _h = (_F_q * _g).mod(N_minus_one).mod(_q);
 }
 
 
@@ -74,7 +74,7 @@ void ntru::gen_f() {
     _F_p = _f.rev(N_minus_one, _p);
     _F_q = _f.rev(N_minus_one, _q);
 
-    _h = (_F_q * _g).rev(N_minus_one, _q);
+    _h = (_F_q * _g).mod(N_minus_one).mod(_q);
 }
 
 const polynom& ntru::get_f() const
@@ -86,14 +86,13 @@ const polynom& ntru::get_h() const
 
 polynom ntru::encrypt(const polynom& other) const {
     polynom r(_N); // уже случайный
-    polynom salt = (r * _p * _h).rev(N_minus_one, _q);
-    polynom m    = other.rev(N_minus_one, _q);
+    polynom salt = (r * _p * _h).mod(N_minus_one).mod(_q);
 
-    return (salt + m).rev(N_minus_one, _q);
+    return (salt + other).mod(N_minus_one).mod(_q);
 }
 
 polynom ntru::decrypt(const polynom& other) const {
-    polynom a = (other * _f).rev(N_minus_one, _q);
+    polynom a = (other * _f).mod(N_minus_one).mod(_q);
 
     // центрируем из [0, q) в (-q/2, q/2]
     for (unsigned i = 0; i < _N; i++) {
@@ -103,5 +102,5 @@ polynom ntru::decrypt(const polynom& other) const {
         a[i] = (size_t)coef;
     }
 
-    return (a * _F_p).rev(N_minus_one, _p);
+    return (a * _F_p).mod(N_minus_one).mod(_p);
 }

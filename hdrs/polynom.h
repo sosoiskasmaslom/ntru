@@ -11,7 +11,7 @@ namespace own {
     size_t pow(size_t a, size_t b);
     size_t abs(size_t a);
 
-    size_t randint(size_t min, size_t max);
+    int randint(int min, int max);
 
     class polynom {
         size_t *_vector; // коэффициенты полинома
@@ -64,6 +64,7 @@ namespace own {
                            // (без перемещения коэффициентов)
         polynom& fit(); // убирает нули после старшего члена
         polynom& mod(int p); // приводит все коэффициенты по модулю
+        polynom& mod(const polynom& other); // приводит все коэффициенты по модулю
 
         // я знаю что C-like код
         // вообще будет самой некрасивой частью кода
