@@ -1,14 +1,8 @@
 
-#include <iostream>
+#include <ostream>
 #include <algorithm>
 #include "polynom.h"
 using namespace own;
-
-
-template<typename F>
-void edit_v(own::size_t *v, unsigned N, F op) {
-    for(own::size_t *end = v+N; v<end; op(v++)) {}
-}
 
 
 polynom& polynom::operator=(const polynom& other) {

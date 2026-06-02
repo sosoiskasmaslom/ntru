@@ -1,5 +1,5 @@
 
-#include <iostream>
+#include <ostream>
 #include <algorithm>
 #include <random>
 #include "algorithm.h"

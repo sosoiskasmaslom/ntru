@@ -62,6 +62,13 @@ polynom::polynom(const polynom& other)
     );
 }
 
+polynom::polynom(polynom&& other)
+: _N(other.get_N()), _vector(new size_t[other.get_N()])
+{
+    _vector = other.get_v();
+    other._vector = nullptr;
+}
+
 
 polynom::~polynom()
 { delete[] _vector; }
@@ -125,7 +132,6 @@ polynom& polynom::mod(const polynom& other) {
 
 
 polynom* polynom::division(const polynom& other) const {
-
     if (other.get_d() < 0 )
     { throw std::invalid_argument("Division by zero polynomial"); }
 
@@ -142,8 +148,8 @@ polynom* polynom::division(const polynom& other) const {
     { return res; }
 
     for(int i = deg_c-1; (i+1); --i) {
-        (*res).at(i) = (*(res+1)).at((*(res+1)).get_d()) / other[other.get_d()];
-        *(res+1) -= (other.mult_x(i) *= (*res).at(i));
+        res->at(i) = (res+1)->at((res+1)->get_d()) / other[other.get_d()];
+        *(res+1) -= (other.mult_x(i) *= res->at(i));
     }
 
     return res;

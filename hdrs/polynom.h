@@ -9,6 +9,7 @@ namespace own {
     int randint(int min, int max);
 
     class polynom {
+        static inline int i = 0;
         size_t *_vector; // коэффициенты полинома
         unsigned _N; // размерность многочлена
                      // (по сути размер массива)
@@ -18,6 +19,7 @@ namespace own {
         polynom(unsigned N, size_t a);
         polynom(unsigned N, size_t *vector);
         polynom(const polynom& other);
+        polynom(polynom&& other); // семантика перемещения
 
         ~polynom();
 
